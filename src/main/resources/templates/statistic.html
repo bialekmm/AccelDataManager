@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport">
+  <title>Accel Data Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="~{_navbar :: navbar}"></div>
+<div class="container">
+  <h1 class="text-center">Statistic Data</h1>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+    <tr>
+      <th></th>
+      <th>Ch1</th>
+      <th>Ch2</th>
+      <th>Ch3</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Number of samples [-]</td>
+      <td th:text="${numSmp}"></td>
+      <td th:text="${numSmp}"></td>
+      <td th:text="${numSmp}"></td>
+    </tr>
+    <tr>
+      <td>Sample Rate [Hz]</td>
+      <td th:text="${smpRate}"></td>
+      <td th:text="${smpRate}"></td>
+      <td th:text="${smpRate}"></td>
+    </tr>
+    <tr>
+      <td>Min Amp [m/s2]</td>
+      <td th:text="${minAmp['Ch1']}"></td>
+      <td th:text="${minAmp['Ch2']}"></td>
+      <td th:text="${minAmp['Ch3']}"></td>
+    </tr>
+    <tr>
+      <td>Max Amp [m/s2]</td>
+      <td th:text="${maxAmp['Ch1']}"></td>
+      <td th:text="${maxAmp['Ch2']}"></td>
+      <td th:text="${maxAmp['Ch3']}"></td>
+    </tr>
+    <tr>
+      <td>Mean Amp [m/s2]</td>
+      <td th:text="${avaAmp['Ch1']}"></td>
+      <td th:text="${avaAmp['Ch2']}"></td>
+      <td th:text="${avaAmp['Ch3']}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

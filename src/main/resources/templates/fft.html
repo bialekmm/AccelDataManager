@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Accel Data Manager</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.1.1/chartjs-plugin-zoom.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="~{_navbar :: navbar}"></div>
+<div style="width: 80%; margin: 0 auto;">
+  <canvas id="myChart"></canvas>
+</div>
+
+<div id="legend-buttons">
+  <button onclick="changeOrder(1)">Ch1</button>
+  <button onclick="changeOrder(2)">Ch2</button>
+  <button onclick="changeOrder(3)">Ch3</button>
+  <button id="resetZoomButton">Reset Zoom</button>
+</div>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  const time = /*[[${time}]]*/ [];
+  const fftCh1 = /*[[${fftCh1}]]*/ [];
+  const fftCh2 = /*[[${fftCh2}]]*/ [];
+  const fftCh3 = /*[[${fftCh3}]]*/ [];
+  /*]]>*/
+
+  const N = fftCh1.length; //
+  const T = time[time.length - 1];
+  const frequencies = Array.from({ length: N }, (_, i) => (i / N) * (1 / T));
+
+  // Create a chart with zoom plugin
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: time,
+      datasets: [
+        {
+          label: 'Ch1 Amplitude',
+          data: fftCh1.map(complex => Math.sqrt(complex[0] * complex[0] + complex[1] * complex[1])),
+          borderColor: 'rgb(232,0,48)',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0,
+          order: 2,
+        },
+        {
+          label: 'Ch2 Amplitude',
+          data: fftCh2.map(complex => Math.sqrt(complex[0] * complex[0] + complex[1] * complex[1])),
+          borderColor: 'rgb(0,127,215)',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0,
+          order: 1,
+        },
+        {
+          label: 'Ch3 Amplitude',
+          data: fftCh3.map(complex => Math.sqrt(complex[0] * complex[0] + complex[1] * complex[1])),
+          borderColor: 'rgb(115,206,30)',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0,
+          order: 3,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+          title: {
+            display: true,
+            text: 'Time [s]',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Amplitude [m/s2]',
+          },
+        },
+      },
+      plugins: {
+        zoom: {
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true,
+            },
+            mode: 'xy',
+          },
+          pan: {
+            enabled: true,
+            mode: 'xy',
+          },
+        },
+      },
+    },
+  });
+
+  function changeOrder(order) {
+    chart.data.datasets.forEach(dataset => {
+      if (dataset.label === 'Ch' + order + ' Amplitude') {
+        dataset.order = 1;
+      } else {
+        dataset.order = 0;
+      }
+    });
+
+    chart.update();
+  }
+
+  document.getElementById('resetZoomButton').addEventListener('click', () => {
+    chart.resetZoom();
+  });
+  /*]]>*/
+</script>
+</body>
+</html>
